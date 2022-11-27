@@ -44,9 +44,9 @@ getPhotoExtras <- function(extras,
       c(
         "description", "license", "date_upload", "date_taken", "owner_name",
         "icon_server", "original_format", "last_update", "geo", "tags",
-        "machine_tags", "o_dims", "views", "media", "path_alias",
+        "machine_tags", "o_dims", "views", "count_views", "count_comments", "count_faves", "media", "path_alias",
         "url_sq", "url_t", "url_s", "url_q", "url_m",
-        "url_n", "url_z", "url_c", "url_l", "url_o", "count_views","count_comments","count_faves"
+        "url_n", "url_z", "url_c", "url_l", "url_o"
       )
   }
 
