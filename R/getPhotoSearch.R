@@ -101,6 +101,8 @@ getPhotoSearch <- function(api_key = NULL,
                            extras = NULL,
                            per_page = 100,
                            page = NULL,
+                           max_upload_date = NULL,
+                           min_upload_date = NULL,
                            ...) {
   params <- rlang::list2(...)
 
@@ -180,7 +182,33 @@ getPhotoSearch <- function(api_key = NULL,
   if (!is.null(tags)) {
     tags <- paste(unique(tags), collapse = ",")
   }
-
+  
+  IsDate <- function(mydate, date.format = "%y/%m/%d") {
+  tryCatch(!is.na(as.Date(mydate, date.format)),  
+           error = function(err) {FALSE})  
+}
+  if (!is.null(max_upload_date)) {
+    max_upload_date <- as.Date(max_upload_date)
+    date_format_check <- IsDate(max_upload_date)
+    if (!date_format_check) {
+      rlang::abort(
+        "The `max_upload_date` argument must be in YYYY-MM-DD format."
+      )
+    }
+    max_upload_date = paste(max_upload_date)
+   }
+  
+    if (!is.null(min_upload_date)) {
+    min_upload_date <- as.Date(min_upload_date)
+    date_format_check <- IsDate(min_upload_date)
+    if (!date_format_check) {
+      rlang::abort(
+        "The `min_upload_date` argument must be in YYYY-MM-DD format."
+      )
+    }
+    min_upload_date = paste(min_upload_date)
+   }
+  
   data <-
     FlickrAPIRequest(
       method = "flickr.photos.search",
@@ -192,7 +220,9 @@ getPhotoSearch <- function(api_key = NULL,
       bbox = bbox,
       license = license_id,
       sort = sort,
-      extras = extras
+      extras = extras,
+      min_upload_date = min_upload_date,
+      max_upload_date = max_upload_date
     )
 
   getPhotoData(
