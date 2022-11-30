@@ -183,31 +183,33 @@ getPhotoSearch <- function(api_key = NULL,
     tags <- paste(unique(tags), collapse = ",")
   }
   
-  IsDate <- function(mydate, date.format = "%y-%m-%d") {
-  tryCatch(!is.na(as.Date(mydate, date.format)),  
+IsDate <- function(mydate, date.format = "%Y-%m-%d") {
+  tryCatch(!is.na(as.Date(mydate, date.format)) & !substr(as.Date(mydate, date.format), 1,2)=="00",  
            error = function(err) {FALSE})  
 }
-  if (!is.null(max_upload_date)) {
-    max_upload_date <- as.Date(max_upload_date)
-    date_format_check <- IsDate(max_upload_date)
-    if (!date_format_check) {
-      rlang::abort(
-        "The `max_upload_date` argument must be in YYYY-MM-DD format."
-      )
-    }
-    max_upload_date = paste(as.numeric(as.POSIXct(max_upload_date)))
-   }
-  
-    if (!is.null(min_upload_date)) {
-    min_upload_date <- as.Date(min_upload_date)
-    date_format_check <- IsDate(min_upload_date)
-    if (!date_format_check) {
-      rlang::abort(
-        "The `min_upload_date` argument must be in YYYY-MM-DD format."
-      )
-    }
-    min_upload_date = paste(as.numeric(as.POSIXct(min_upload_date)))
-   }
+if (!is.null(max_upload_date)) {
+  date_format_check <- IsDate(max_upload_date)
+  if (!date_format_check) {
+    rlang::abort(
+      "The `max_upload_date` argument must be in YYYY-MM-DD format."
+    )
+  }
+  max_upload_date <- as.Date(max_upload_date)
+  max_upload_date = paste(as.numeric(as.POSIXct(max_upload_date)))
+}
+
+if (!is.null(min_upload_date)) {
+  date_format_check <- IsDate(min_upload_date)
+  if (!date_format_check | substr(max_upload_date, 1,1)=="0") {
+    rlang::abort(
+      "The `min_upload_date` argument must be in YYYY-MM-DD format."
+    )
+  }
+  min_upload_date <- as.Date(min_upload_date)
+  min_upload_date = paste(as.numeric(as.POSIXct(min_upload_date)))
+}
+
+
   
   data <-
     FlickrAPIRequest(
