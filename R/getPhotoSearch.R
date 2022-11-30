@@ -183,7 +183,7 @@ getPhotoSearch <- function(api_key = NULL,
     tags <- paste(unique(tags), collapse = ",")
   }
   
-  IsDate <- function(mydate, date.format = "%y/%m/%d") {
+  IsDate <- function(mydate, date.format = "%y-%m-%d") {
   tryCatch(!is.na(as.Date(mydate, date.format)),  
            error = function(err) {FALSE})  
 }
@@ -195,7 +195,7 @@ getPhotoSearch <- function(api_key = NULL,
         "The `max_upload_date` argument must be in YYYY-MM-DD format."
       )
     }
-    max_upload_date = paste(max_upload_date)
+    max_upload_date = paste(as.numeric(as.POSIXct(max_upload_date)))
    }
   
     if (!is.null(min_upload_date)) {
@@ -206,7 +206,7 @@ getPhotoSearch <- function(api_key = NULL,
         "The `min_upload_date` argument must be in YYYY-MM-DD format."
       )
     }
-    min_upload_date = paste(min_upload_date)
+    min_upload_date = paste(as.numeric(as.POSIXct(min_upload_date)))
    }
   
   data <-
